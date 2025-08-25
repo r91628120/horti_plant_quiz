@@ -153,26 +153,271 @@
   </div>
 
 <script>
-// ====== 工具 ======
+// ====== 小工具 ======
 const $=s=>document.querySelector(s);
 const $$=s=>Array.from(document.querySelectorAll(s));
 const shuffle=arr=>arr.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
 const sampleN=(arr,n)=>shuffle(arr.slice()).slice(0,Math.min(n,arr.length));
-const AD = ["A","B","C","D"];
+const AD=["A","B","C","D"];
 
-// ====== 狀態 ======
+let DATA=null;
 let QUIZ_VERSION='v0';
-let DATA=null;          // 讀入的 questions.json
-let STATE={};          // 目前測驗狀態
-let TIMER_ID=null;     // 倒數計時器
+let STATE={};
+let TIMER_ID=null;
 
-// 人數本機統計
 function getPeople(){ return +(localStorage.getItem('quiz_people_count')||'0'); }
 function setPeople(v){ localStorage.setItem('quiz_people_count', String(v)); }
-function renderPeople(){ $('#people').textContent = getPeople().toString(); $('#people2').textContent=$('#people').textContent; }
+function renderPeople(){ $('#people').textContent=getPeople(); const p2=$('#people2'); if(p2) p2.textContent=getPeople(); }
 
-// ====== 載入題庫 ======
+// ====== 新增：把錯誤顯示在畫面 ======
+function showError(msg, detail){
+  let box = document.getElementById('errorBox');
+  if(!box){
+    box = document.createElement('div');
+    box.id='errorBox';
+    box.style.marginTop='10px';
+    box.style.padding='12px';
+    box.style.border='1px solid #fecaca';
+    box.style.borderRadius='12px';
+    box.style.background='#fef2f2';
+    box.style.color='#991b1b';
+    $('#view-home').appendChild(box);
+  }
+  box.innerHTML = `<b>題庫載入失敗</b>：${msg}${detail? `<div style="margin-top:6px;font-family:monospace;white-space:pre-wrap">${detail}</div>`:''}`;
+}
+
+// ====== 載入題庫（加入完整偵錯） ======
 async function loadQuestions(){
   const badge = $('#badgeLoaded');
   try{
-    const res = await fetch('questions.json',{cache:'no-store'});
+    const res = await fetch('./questions.json', {cache:'no-store'});
+    if(!res.ok){
+      badge.textContent = '題庫：讀取失敗';
+      showError(`HTTP ${res.status} ${res.statusText}（請檢查 questions.json 是否同層／檔名大小寫）`);
+      return false;
+    }
+    const txt = await res.text();
+    let obj;
+    try{
+      obj = JSON.parse(txt);
+    }catch(e){
+      badge.textContent = '題庫：JSON 解析錯誤';
+      showError('JSON 格式錯誤，請用 JSON 檢查工具修正。', String(e));
+      return false;
+    }
+
+    // 結構檢查
+    if(!obj || !Array.isArray(obj.categories)){
+      badge.textContent = '題庫：結構不符';
+      showError('questions.json 缺少 categories 陣列。', JSON.stringify(obj,null,2));
+      return false;
+    }
+    // 每個類別檢查
+    for(const cat of obj.categories){
+      if(!cat.key || !cat.name || !Array.isArray(cat.items)){
+        showError('某個類別缺少 key/name/items。', JSON.stringify(cat,null,2));
+        return false;
+      }
+      for(const it of cat.items){
+        if(!it.name || !it.image){
+          showError('某個題目缺少 name 或 image。', JSON.stringify(it,null,2));
+          return false;
+        }
+      }
+    }
+
+    // OK => 綁定 UI
+    DATA = obj;
+    QUIZ_VERSION = obj.version || 'v0';
+    $('#badgeVersion').textContent = `ver ${QUIZ_VERSION}`;
+    badge.textContent = `題庫：${obj.categories.length} 類，合計 ${obj.categories.reduce((s,c)=>s+c.items.length,0)} 題`;
+
+    // 下拉選單
+    const sel = $('#selCat');
+    sel.innerHTML = '';
+    obj.categories.forEach(c=>{
+      const op = document.createElement('option');
+      op.value = c.key;
+      op.textContent = `${c.key} — ${c.name}（${c.items.length}）`;
+      sel.appendChild(op);
+    });
+
+    return true;
+  }catch(err){
+    $('#badgeLoaded').textContent = '題庫：讀取失敗';
+    showError('無法讀取 questions.json（可能路徑或權限問題）', String(err));
+    return false;
+  }
+}
+
+// ====== 產生 100 題（或 10 題快速體驗） ======
+function buildExam(catKey, total){
+  const cat = DATA.categories.find(x=>x.key===catKey) || DATA.categories[0];
+  const pool = cat.items.slice();
+  const names = [...new Set(pool.map(i=>i.name))];
+  if(pool.length < 4){
+    alert('該題庫題目太少（<4），無法出題'); return null;
+  }
+
+  const picked = sampleN(pool, Math.min(total, pool.length)).map(q=>({image:q.image, name:q.name}));
+  // 為每題找 3 個異名錯誤選項
+  const exam = picked.map(q=>{
+    const wrongNames = shuffle(names.filter(n=>n!==q.name)).slice(0,3);
+    // 從該名稱的題庫中抽一張當錯誤選項的顯示文字（這裡只顯示 name）
+    const choices = shuffle([
+      {key:'A', text:q.name, correct:true},
+      {key:'B', text:wrongNames[0], correct:false},
+      {key:'C', text:wrongNames[1], correct:false},
+      {key:'D', text:wrongNames[2], correct:false},
+    ].map((c,i)=>({...c,key:AD[i]})));
+    return {img:q.image, answer:q.name, choices};
+  });
+
+  return {cat, questions:exam};
+}
+
+// ====== 渲染作答頁 ======
+function toView(id){
+  ['#view-home','#view-quiz','#view-result'].forEach(s=>$(s).classList.add('hide'));
+  $(id).classList.remove('hide');
+}
+
+function renderQuiz(){
+  const idx = STATE.idx;
+  const q = STATE.questions[idx];
+  $('#qno').textContent = `第 ${idx+1} / ${STATE.questions.length} 題`;
+  $('#qimg').src = q.img;
+
+  const box = $('#choices'); box.innerHTML='';
+  q.choices.forEach((c,i)=>{
+    const div = document.createElement('div');
+    div.className='choice';
+    div.innerHTML = `
+      <span class="tag">${AD[i]}</span>
+      <label style="cursor:pointer;flex:1">
+        <input type="radio" name="opt" value="${c.text}" ${q.your===c.text?'checked':''} style="margin-right:8px"/>
+        ${c.text}
+      </label>
+    `;
+    div.onclick = (ev)=>{
+      if(ev.target.tagName.toLowerCase()!=='input'){
+        const inp = div.querySelector('input'); inp.checked=true;
+      }
+      q.your = div.querySelector('input').value;
+      renderPalette();
+    };
+    box.appendChild(div);
+  });
+
+  renderPalette();
+  $('#badgeRemain').textContent = `尚未作答：${STATE.questions.filter(x=>!x.your).length} 題`;
+}
+
+function renderPalette(){
+  const pal = $('#palette'); pal.innerHTML='';
+  STATE.questions.forEach((q,i)=>{
+    const b = document.createElement('button');
+    b.textContent = String(i+1);
+    if(STATE.idx===i) b.classList.add('current');
+    if(q.your) b.style.background='#e0f2fe';
+    b.onclick=()=>{ STATE.idx=i; renderQuiz(); };
+    pal.appendChild(b);
+  });
+}
+
+function startTimer(mins){
+  let sec = mins*60;
+  const el = $('#timer');
+  clearInterval(TIMER_ID);
+  TIMER_ID=setInterval(()=>{
+    const m = String(Math.floor(sec/60)).padStart(2,'0');
+    const s = String(sec%60).padStart(2,'0');
+    el.textContent=`${m}:${s}`;
+    if(--sec<0){
+      clearInterval(TIMER_ID);
+      submitQuiz(true);
+    }
+  },1000);
+}
+
+// ====== 交卷 ======
+function submitQuiz(auto=false){
+  clearInterval(TIMER_ID);
+  const per = 1; // 每題 1 分
+  let correct=0;
+  STATE.questions.forEach(q=>{ if(q.your===q.answer) correct++; });
+  STATE.score = correct*per;
+
+  setPeople(getPeople()+1); renderPeople();
+
+  // 渲染結果
+  $('#resUser').textContent=`考生：${STATE.user}`;
+  $('#resCat').textContent=`題庫：${STATE.cat.name}`;
+  $('#resVersion').textContent=`ver ${QUIZ_VERSION}`;
+  $('#resScore').textContent=`得分：${STATE.score} 分`;
+
+  const tb = $('#tbody'); tb.innerHTML='';
+  STATE.questions.forEach((q,i)=>{
+    const tr=document.createElement('tr');
+    const pass = (q.your===q.answer);
+    tr.innerHTML = `
+      <td>${i+1}</td>
+      <td><img src="${q.img}" style="width:120px;height:76px;object-fit:cover;border-radius:8px;border:1px solid #e5e7eb" onerror="this.src='https://placehold.co/240x160'"></td>
+      <td>${q.your||'<span class="muted">未作答</span>'}</td>
+      <td>${q.answer}</td>
+      <td>${ pass ? '<span class="ok">✔ 正確</span>' : '<span class="ng">✘ 錯誤</span>' }</td>
+    `;
+    tb.appendChild(tr);
+  });
+
+  toView('#view-result');
+}
+
+// ====== 事件與初始化 ======
+function bindHome(){
+  $('#btnStart').onclick=()=>{
+    if(!DATA){ alert('題庫尚未載入'); return; }
+    const name=$('#inpName').value.trim();
+    if(!name){ alert('請輸入姓名/代號'); return; }
+    const catKey=$('#selCat').value;
+    const exam = buildExam(catKey, 100);
+    if(!exam) return;
+    STATE={ user:name, cat:exam.cat, idx:0, questions:exam.questions };
+    $('#badgeUser').textContent=`考生：${name}`;
+    $('#badgeCat').textContent=`題庫：${exam.cat.name}`;
+    toView('#view-quiz');
+    renderQuiz();
+    startTimer(40);
+  };
+
+  $('#btnQuick').onclick=()=>{
+    if(!DATA){ alert('題庫尚未載入'); return; }
+    const name=$('#inpName').value.trim() || 'Demo';
+    const catKey=$('#selCat').value;
+    const exam = buildExam(catKey, 10);
+    if(!exam) return;
+    STATE={ user:name, cat:exam.cat, idx:0, questions:exam.questions };
+    $('#badgeUser').textContent=`考生：${name}`;
+    $('#badgeCat').textContent=`題庫：${exam.cat.name}`;
+    toView('#view-quiz');
+    renderQuiz();
+    startTimer(10); // 快速體驗 10 分鐘
+  };
+
+  $('#btnPrev').onclick=()=>{ if(STATE.idx>0){ STATE.idx--; renderQuiz(); } };
+  $('#btnNext').onclick=()=>{ if(STATE.idx<STATE.questions.length-1){ STATE.idx++; renderQuiz(); } };
+  $('#btnSubmit').onclick=()=>{ if(confirm('確定交卷？')) submitQuiz(false); };
+  $('#btnBackHome').onclick=()=>{ toView('#view-home'); };
+}
+
+(async function init(){
+  renderPeople();
+  bindHome();
+  const ok = await loadQuestions();
+  if(ok){
+    // 載入動畫
+    const p = $('#progHome'); p.style.transition='width .6s'; p.style.width='100%';
+    setTimeout(()=>{ p.style.height='0'; },800);
+  }
+})();
+</script>
