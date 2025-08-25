@@ -1,429 +1,480 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>園藝丙級術科識別線上模擬測驗｜100 題｜40 分鐘｜單選</title>
-  <meta name="description" content="園藝丙級術科識別線上模擬測驗：依固定比例從果樹、蔬菜、水生、蔓性、草本、灌木、喬木、資材等 8 大題庫抽題組成 100 題，限時 40 分鐘，圖片對應單選題。僅供教學與非營利用途。">
-  <meta name="robots" content="index,follow">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>園藝丙級術科識別線上模擬測驗｜Horti ID Quiz</title>
+  <meta name="description" content="園藝丙級術科識別線上模擬測驗：依八大類題庫比例自動組卷（果樹、蔬菜、水生、蔓性、草本、灌木、喬木、資材），每題配圖單選，40分鐘倒數，支援快速體驗10題。"/>
+  <meta name="keywords" content="園藝丙級,術科,識別,模擬測驗,果樹,蔬菜,水生植物,蔓性植物,草本,灌木,喬木,資材,題庫,練習"/>
+  <meta name="robots" content="index,follow"/>
+
   <style>
     :root{
-      --bg:#f5f7fa; --card:#ffffff; --text:#1f2937; --sub:#475569; --accent:#2563eb;
-      --good:#16a34a; --bad:#dc2626; --muted:#cbd5e1;
+      --bg:#f6f8fb; --card:#fff; --text:#0f172a; --muted:#64748b;
+      --primary:#2563eb; --primary-2:#1d4ed8; --good:#16a34a; --bad:#dc2626;
+      --border:#e2e8f0;
     }
     *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;background:linear-gradient(180deg,#f9fafb,#f1f5f9 20%,#e2e8f0);color:var(--text)}
-    .container{max-width:1100px;margin:0 auto;padding:20px}
-    .card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:20px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
-    h1{font-size:28px;margin:0 0 12px}
-    h2{font-size:20px;color:var(--sub);margin:0 0 16px}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--text)}
+    .container{max-width:1100px;margin:0 auto;padding:24px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 6px 18px rgba(0,0,0,.06);padding:20px}
+    h1{font-size:28px;margin:0 0 8px}
+    h2{font-size:20px;margin:8px 0 16px;color:#1f2937}
     p{color:#334155;margin:6px 0}
-    label{display:block;margin:12px 0 6px}
-    input[type="text"]{width:100%;padding:12px;border-radius:10px;border:1px solid #cbd5e1;background:#fff;color:var(--text)}
-    .row{display:flex;gap:16px;flex-wrap:wrap}
+    .muted{color:var(--muted)}
+    .row{display:flex;gap:14px;flex-wrap:wrap}
     .col{flex:1 1 320px}
-    .btn{display:inline-flex;align-items:center;gap:10px;padding:12px 18px;border-radius:12px;border:1px solid #cbd5e1;background:#f1f5f9;color:#1f2937;text-decoration:none;cursor:pointer;font-weight:600;transition:all .2s ease}
-    .btn:hover{background:#e2e8f0;border-color:#94a3b8}
-    .btn.primary{border-color:#2563eb;background:#2563eb;color:#fff}
-    .btn.primary:hover{background:#1d4ed8}
-    .muted{color:#64748b}
-    .badge{display:inline-block;padding:4px 10px;border-radius:999px;background:#e2e8f0;border:1px solid #cbd5e1;color:#1e293b;font-size:12px}
-    .notice{padding:10px 12px;border-radius:10px;background:#f1f5f9;border:1px solid #cbd5e1;color:#1e293b}
-    .footer{margin-top:20px;color:#64748b}
-    .center{display:flex;align-items:center;justify-content:center}
-    .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .progress{height:8px;background:#e2e8f0;border-radius:999px;overflow:hidden}
+    input,select{width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:#fff}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:12px 18px;border-radius:12px;border:1px solid var(--border);cursor:pointer;background:#f1f5f9}
+    .btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .btn.primary:hover{background:var(--primary-2)}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+    .inline{display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .badge{display:inline-block;padding:4px 10px;border-radius:999px;background:#eef2ff;color:#3730a3;font-size:12px;border:1px solid #c7d2fe}
+    .progress{height:8px;border-radius:999px;background:#e5e7eb;overflow:hidden}
     .progress>span{display:block;height:100%;background:linear-gradient(90deg,#2563eb,#60a5fa);width:0}
-    .quiz-img{width:100%;max-height:520px;object-fit:contain;border-radius:12px;background:#f8fafc;border:1px solid #cbd5e1}
-    .choices{display:grid;gap:10px;margin-top:14px}
-    .choice{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;border:1px solid #cbd5e1;background:#ffffff;cursor:pointer}
-    .choice:hover{background:#f1f5f9}
-    .choice input{transform:scale(1.2)}
-    .ad{min-width:2.4em;text-align:center;font-weight:700;color:#334155}
-    .ok{color:var(--good);font-weight:700}
-    .ng{color:var(--bad);font-weight:700}
-    table{width:100%;border-collapse:collapse;margin-top:12px}
-    th,td{padding:10px;border-bottom:1px solid #e2e8f0;text-align:left}
-    .nav-grid{display:flex;flex-wrap:wrap;gap:8px}
-    .nav-grid button{width:38px;height:38px;border-radius:10px;border:1px solid #cbd5e1;background:#fff;cursor:pointer}
-    .nav-grid button.answered{border-color:#2563eb;background:#dbeafe}
-    .nav-grid button.current{outline:2px solid #2563eb}
-    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .img{width:100%;max-height:420px;object-fit:contain;border-radius:14px;border:1px solid var(--border);background:#f8fafc}
+    .choices{display:grid;gap:10px;margin-top:12px}
+    .choice{display:flex;gap:10px;align-items:flex-start;padding:12px;border-radius:12px;border:1px solid var(--border);background:#f8fafc;cursor:pointer}
+    .choice input{transform:translateY(3px)}
+    .choice.correct{border-color:#16a34a;background:#ecfdf5}
+    .choice.wrong{border-color:#dc2626;background:#fef2f2}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .nav{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+    .nav button{width:36px;height:36px;border-radius:10px;border:1px solid var(--border);background:#fff}
+    .nav button.answered{background:#dbeafe;border-color:#2563eb}
+    .footer{margin-top:20px;color:var(--muted);font-size:12px}
+    .grid{display:grid;gap:16px}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    @media (max-width:720px){.grid-2{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
   <div class="container">
-
-    <!-- ====== 首頁 (A) ====== -->
+    <!-- A 首頁 -->
     <section id="view-home" class="card">
       <h1>園藝丙級術科識別線上模擬測驗</h1>
-
-      <p class="notice">
-        資料來源：勞動部勞動力發展署技能檢定中心。<br>
-        本網站圖片僅供教育與非營利用途，著作權歸原權利人所有，<b>嚴禁未經授權之商業使用</b>。
+      <p class="muted">
+        資料來源：勞動部勞動力發展署技能檢定中心。本網站圖片僅供教育與非營利用途，著作權歸原權利人所有，嚴禁未經授權之商業使用。
       </p>
+      <div class="card" style="background:#f8fafc">
+        <p><b>測驗說明：</b>本試題共測試 <b>100 題</b>，每題 <b>1 分</b>，總分 <b>100 分</b>，考試時間 <b>40 分鐘</b>。題型為單選題，需依試題圖片配合選項點選，正確點選者始給分，題目可前後閱視作答。</p>
+      </div>
 
-      <p class="notice">
-        <b>測驗說明</b>：本試題共測試 <b>100 題</b>，每題 <b>1 分</b>，總分 <b>100 分</b>，考試時間 <b>40 分鐘</b>。題型為單選題，需依試題圖片配合選項點選，正確點選者始給分；題目可前後閱視作答。
-      </p>
-
-      <div class="row">
+      <div class="row" style="margin-top:10px">
         <div class="col">
-          <label for="inpName">姓名／代號</label>
-          <input id="inpName" type="text" placeholder="請輸入姓名或代號" />
+          <label>姓名 / 代號</label>
+          <input id="inpName" placeholder="請輸入姓名或代號"/>
         </div>
         <div class="col">
-          <label>版本</label>
-          <div class="toolbar">
-            <span id="versionBadge" class="badge">ver -</span>
-            <span class="muted">目前累計測驗人數：<span id="peopleCount">0</span> 人（本機）</span>
-            <span class="muted">題庫：<span id="bankInfo">—</span></span>
-          </div>
+          <label>選擇題庫分類</label>
+          <select id="selCategory">
+            <option value="ALL" selected>全部題庫（依比例組卷）</option>
+          </select>
         </div>
       </div>
 
-      <div class="toolbar" style="margin-top:14px">
-        <button class="btn primary" id="btnStart">
-          ▶ 開始測驗（100 題）
-        </button>
-        <button class="btn" id="btnQuick">
-          ⚡ 快速體驗（10 題）
-        </button>
+      <div class="inline" style="margin-top:12px">
+        <span class="badge" id="badgeVer">ver -</span>
+        <span class="muted">目前累計測驗人數：<span id="people">0</span> 人（本機）</span>
+        <span class="muted">題庫：<span id="badgeBanks">—</span></span>
       </div>
 
-      <p class="footer">© 2025 Horti ID Quiz．僅供教學示範（支援 <code>questions.json</code> 類別題庫）。</p>
+      <div class="inline" style="margin-top:14px">
+        <button id="btnStart" class="btn primary">▶ 開始測驗（100 題）</button>
+        <button id="btnQuick" class="btn">⚡ 快速體驗（10 題）</button>
+      </div>
     </section>
 
-    <!-- ====== 作答頁 (B) ====== -->
-    <section id="view-quiz" class="card" hidden>
-      <div class="toolbar">
-        <span id="quizUser" class="badge">—</span>
-        <span id="quizInfo" class="badge">—</span>
-        <span id="timer" class="badge">40:00</span>
-        <div class="progress" style="flex:1"><span id="bar" style="width:0"></span></div>
+    <!-- B 作答頁 -->
+    <section id="view-quiz" class="card" style="display:none">
+      <div class="inline" style="justify-content:space-between;width:100%">
+        <div class="inline">
+          <span class="badge">考生：<span id="quizUser">-</span></span>
+          <span class="badge">題數：<span id="quizTotal">0</span></span>
+          <span class="badge">40:00</span>
+        </div>
+        <div class="progress" style="width:50%"><span id="bar"></span></div>
       </div>
 
-      <h2 id="qTitle" style="margin-top:12px">第 1 / 100 題</h2>
-      <img id="qImg" class="quiz-img" alt="題目圖片" src="">
+      <h2 id="quizTitle">第 1 / 0 題</h2>
+      <img id="quizImg" class="img" alt="題目圖片" src="" onerror="this.src='https://placehold.co/800x420?text=No+Image'"/>
 
-      <div id="choices" class="choices" aria-label="選項列表"></div>
+      <div id="choices" class="choices"></div>
 
-      <div class="toolbar" style="margin-top:14px">
-        <button class="btn" id="btnPrev">← 上一題</button>
-        <button class="btn" id="btnNext">下一題 →</button>
-        <button class="btn primary" id="btnSubmit">交卷</button>
+      <div class="toolbar">
+        <button id="btnPrev" class="btn">← 上一題</button>
+        <button id="btnNext" class="btn">下一題 →</button>
+        <button id="btnSubmit" class="btn primary">交卷</button>
       </div>
 
       <div style="margin-top:10px">
-        <label class="muted">題目導覽</label>
-        <div id="nav" class="nav-grid"></div>
+        <h3 class="muted" style="margin:0 0 8px">題目導覽</h3>
+        <div id="nav" class="nav"></div>
       </div>
     </section>
 
-    <!-- ====== 結果頁 (C) ====== -->
-    <section id="view-result" class="card" hidden>
-      <h2>測驗結果</h2>
-      <p id="resMeta" class="notice"></p>
-      <table>
-        <thead>
-          <tr><th>#</th><th>題圖</th><th>你的答案</th><th>正確答案</th><th>判定</th></tr>
-        </thead>
-        <tbody id="resBody"></tbody>
-      </table>
-      <div class="toolbar" style="margin-top:10px">
-        <button class="btn" id="btnBack">回首頁</button>
-        <button class="btn" id="btnRestart">再測一次</button>
+    <!-- C 結果頁 -->
+    <section id="view-result" class="card" style="display:none">
+      <h2>作答結果</h2>
+      <p id="resName">應試者：-</p>
+      <p id="resScore">得分：-</p>
+      <p id="resVersion" class="muted">ver -</p>
+
+      <div class="grid grid-2" style="margin-top:10px">
+        <div>
+          <h3>逐題對錯</h3>
+          <table id="tbl" style="width:100%;border-collapse:collapse;border:1px solid var(--border)">
+            <thead>
+              <tr style="background:#f8fafc">
+                <th style="padding:8px;border-bottom:1px solid var(--border);text-align:left">#</th>
+                <th style="padding:8px;border-bottom:1px solid var(--border);text-align:left">你的答案</th>
+                <th style="padding:8px;border-bottom:1px solid var(--border);text-align:left">正解</th>
+                <th style="padding:8px;border-bottom:1px solid var(--border);text-align:left">結果</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+        <div>
+          <div class="card" style="background:#f8fafc">
+            <p class="muted">
+              資料來源：勞動部勞動力發展署技能檢定中心。本網站圖片僅供教育與非營利用途，著作權歸原權利人所有，嚴禁未經授權之商業使用。
+            </p>
+          </div>
+        </div>
       </div>
     </section>
 
+    <footer class="footer">© 2025 Horti ID Quiz．靜態前端（支援 <code>questions.json</code> 類別題庫）</footer>
   </div>
 
 <script>
-/** ================== 讀題與系統狀態 ================== */
-let QUIZ_VERSION = '-';
-let BANK = {};              // categories 物件 { fruit:[], vegetables:[], ... }
-let ALL_POOL = [];          // 全部題目（便於抽錯誤選項）
+/* ====== 工具 ====== */
+const $ = sel=>document.querySelector(sel);
+const $$ = sel=>Array.from(document.querySelectorAll(sel));
+const shuffle = arr=>arr.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+const sampleN = (arr,n)=>shuffle(arr).slice(0,Math.min(n,arr.length));
+const by = (obj,key,def='-') => (obj && key in obj) ? obj[key] : def;
+
+function titleFromImageUrl(url){
+  // 嘗試從檔名切出中文名稱（去尾碼） e.g. xxx/香蕉_001.jpg -> 香蕉
+  try{
+    const name = decodeURIComponent(url.split('/').pop());
+    return name.replace(/\.[a-z0-9]+$/i,'')
+               .replace(/[_\- ]?\d+$/,''); // 去尾數字
+  }catch{ return url; }
+}
+
+/* ====== 全域狀態 ====== */
+let QUESTIONS = [];          // 全部題庫（平面）
+let CATS = [];               // 類別清單（自 questions.json.categories 或由資料推得）
+let VER = '-';
+
 let STATE = {
-  user:'', questions:[], your:[], idx:0, seconds:0, total:100, quick:false
+  user: '',
+  total: 0,
+  idx: 0,
+  questions: [],  // [{image,name, choices:[...], answer:'', your:null}]
+  timer: 40*60,
+  timerId: null
 };
 
-const $ = s => document.querySelector(s);
-const $$ = s => Array.from(document.querySelectorAll(s));
-
-/** 題庫比例（100 題） */
-const RATIO_100 = {
-  fruit:20, vegetables:20, aquatic:4, vine:6, herbaceous:20, shrub:10, trees:10, materials:10
+/* ====== 抽題比例（100題） ====== */
+const PROPORTION_100 = {
+  'fruit':20,
+  'vegetables':20,
+  'aquatic plants':4,
+  'vine plants':6,
+  'herbaceous plants':20,
+  'shrub':10,
+  'trees':10,
+  'materials':10
 };
 
-/** 將比例等比縮放，如 10 題快速體驗 */
-function scaledCounts(ratioMap, N){
-  const keys = Object.keys(ratioMap);
-  const raw = keys.map(k => ({k, v: ratioMap[k] * N / 100}));
-  let sum = 0;
-  const base = raw.map(x => ({k:x.k, v: Math.floor(x.v), frac: x.v - Math.floor(x.v)}));
-  base.forEach(x => sum += x.v);
-  let remain = N - sum;
-  // 依小數點大到小分配剩餘
-  base.sort((a,b)=> b.frac - a.frac);
-  for(let i=0;i<base.length && remain>0;i++,remain--) base[i].v++;
-  // 回傳
-  const out = {}; base.forEach(x=> out[x.k]=x.v);
-  return out;
-}
-
-/** 工具：隨機打散 */
-function shuffle(arr){ return arr.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]); }
-/** 工具：抽 n 個（不超過長度） */
-function sampleN(arr,n){ return shuffle(arr).slice(0, Math.min(n, arr.length)); }
-/** 工具：集合不同名稱（避免錯誤選項撞名） */
-function uniqueByName(arr){ const seen=new Set(); return arr.filter(x=> (seen.has(x.name)?false:(seen.add(x.name),true))); }
-
-/** 題目結構：{ name, image }，選項為文字（name） */
-
-/** ============ 顯示切換 ============ */
-function show(id){
-  ['#view-home','#view-quiz','#view-result'].forEach(s=>$(s).hidden=true);
-  $(id).hidden=false;
-}
-
-/** ============ 讀取題庫 ============ */
-async function loadQuestionsJSON(){
-  const res = await fetch('questions.json', {cache:'no-store'});
+/* ====== 載入題庫 ====== */
+async function loadQuestions(){
+  const res = await fetch('questions.json',{cache:'no-store'});
   const obj = await res.json();
-  QUIZ_VERSION = obj.version || '-';
-  const cats = obj.categories || {};
-  BANK = cats;
-  // 統一扁平池
-  ALL_POOL = Object.values(cats).flat();
-  // UI 展示
-  $('#versionBadge').textContent = 'ver ' + QUIZ_VERSION;
-  $('#bankInfo').textContent = Object.keys(cats).join('・') + `（共 ${ALL_POOL.length} 題圖）`;
+
+  // 支援兩種格式：
+  // 1) { version, categories, items:[{image,name,category}, ...] }
+  // 2) { version, items:[{image,name,category}, ...] } (categories 缺省時自動彙整)
+  VER = by(obj,'version','-');
+  const items = by(obj,'items',[]);
+
+  // 平面化題庫
+  QUESTIONS = items.map(it=>({
+    image: it.image,
+    name : it.name || titleFromImageUrl(it.image),
+    category: (it.category||'').trim().toLowerCase()
+  })).filter(it=>it.image && it.name);
+
+  // 類別
+  if (Array.isArray(obj.categories) && obj.categories.length){
+    CATS = obj.categories.map(c => c.trim().toLowerCase());
+  }else{
+    CATS = Array.from(new Set(QUESTIONS.map(q=>q.category))).filter(Boolean);
+  }
+
+  // 將類別填進首頁下拉（可單選某類／或 ALL）
+  const sel = $('#selCategory');
+  CATS.forEach(c=>{
+    const opt = document.createElement('option');
+    opt.value = c; opt.textContent = c;
+    sel.appendChild(opt);
+  });
+
+  // 顯示版本＆題庫摘要
+  $('#badgeVer').textContent = `ver ${VER}`;
+  $('#badgeBanks').textContent = `${CATS.length} 類 / ${QUESTIONS.length} 題`;
+
+  // 累計人數（本機）
+  const p = +localStorage.getItem('horti_people') || 0;
+  $('#people').textContent = p.toString();
 }
 
-/** ============ 抽題（依比例） ============ */
-function buildExamCounts(total, quick=false){
-  const counts = quick? scaledCounts(RATIO_100, 10) : RATIO_100; // quick=10 題
-  if(quick){
-    const sum = Object.values(counts).reduce((a,b)=>a+b,0);
-    // 確保合計剛好 10
-    if(sum!==10){
-      // 多或少微調
-      const keys = Object.keys(counts);
-      while(Object.values(counts).reduce((a,b)=>a+b,0) < 10){
-        const k = keys[Math.floor(Math.random()*keys.length)];
-        counts[k]++;
-      }
-      while(Object.values(counts).reduce((a,b)=>a+b,0) > 10){
-        const k = keys[Math.floor(Math.random()*keys.length)];
-        if(counts[k]>0) counts[k]--;
-      }
+/* ====== 依比例抽題 ====== */
+function buildExam(count=100, scope='ALL'){
+  // scope = 'ALL' → 依比例抽；scope = 某類 → 該類中等比抽滿 count
+  const groups = groupByCategory(QUESTIONS);
+  let picked = [];
+
+  if (scope==='ALL'){
+    // 計算各類目數量（按 PROPORTION_100）
+    // 比例不存在的類別不抽
+    let plan = {};
+    const totalNeed = count;
+    let remaining = totalNeed;
+
+    // 先依比例取 floor，再分配餘數
+    const keys = Object.keys(PROPORTION_100);
+    keys.forEach(k=>{
+      const want = Math.floor(PROPORTION_100[k] * count / 100);
+      plan[k] = want;
+      remaining -= want;
+    });
+    // 分配餘數（按比例排序遞補）
+    const order = keys.slice().sort((a,b)=>PROPORTION_100[b]-PROPORTION_100[a]);
+    let i=0;
+    while(remaining>0 && i<order.length){
+      const k = order[i%order.length];
+      plan[k] = (plan[k]||0)+1;
+      remaining--;
+      i++;
     }
+
+    // 根據計畫抽題
+    for (const k of Object.keys(plan)){
+      const src = by(groups,k,[]);
+      const need = plan[k];
+      if (need<=0) continue;
+      picked.push(...sampleN(src, need));
+    }
+
+    // 若總數尚不足（因類別題目不足），補齊：從有題目的類別隨機補
+    while(picked.length < count){
+      const candidates = QUESTIONS.filter(q=>!picked.includes(q));
+      if(!candidates.length) break;
+      picked.push(sampleN(candidates,1)[0]);
+    }
+    picked = picked.slice(0,count);
+
+  }else{
+    // 單一類
+    const src = by(groups, scope, []);
+    picked = sampleN(src, count);
   }
-  return counts;
+
+  // 以 picked 為正解，為每題挑 3 個不同名稱的錯誤選項
+  const allByName = groupByName(QUESTIONS);
+  const allNames = Object.keys(allByName);
+
+  const exam = picked.map(q=>{
+    // 正確名稱
+    const correct = q.name;
+    // 準備錯誤名稱（不同於正解）
+    const wrongNames = shuffle(allNames.filter(n=>n!==correct)).slice(0,3);
+    // 選項：正解 + 3 錯誤
+    const opts = shuffle([correct, ...wrongNames]);
+
+    return {
+      image: q.image,
+      name : correct,
+      choices: opts,
+      answer: correct,
+      your: null
+    };
+  });
+
+  return exam;
 }
 
-/** 每題組合四個選項（1 正確 + 3 錯誤，錯誤必須不同名稱） */
-function makeQuestion(correct, allPool){
-  const correctName = correct.name;
-  // 準備錯誤選項候選：全部不同名稱且不是正解
-  const pool = uniqueByName(allPool).filter(x => x.name !== correctName);
-  const wrongNames = sampleN(pool, 60).map(x => x.name); // 先抽一批名稱候選
-  const pickedWrong = [];
-  for(const nm of wrongNames){
-    if(!pickedWrong.includes(nm) && pickedWrong.length<3) pickedWrong.push(nm);
-    if(pickedWrong.length===3) break;
-  }
-  const opts = shuffle([
-    {key:'A', text:correctName, correct:true},
-    {key:'B', text:pickedWrong[0], correct:false},
-    {key:'C', text:pickedWrong[1], correct:false},
-    {key:'D', text:pickedWrong[2], correct:false},
-  ]);
-  return { image:correct.image, answer:correctName, options:opts };
+function groupByCategory(list){
+  const m = {};
+  list.forEach(q=>{
+    const k = (q.category||'').trim().toLowerCase();
+    if(!m[k]) m[k] = [];
+    m[k].push(q);
+  });
+  return m;
+}
+function groupByName(list){
+  const m = {};
+  list.forEach(q=>{
+    const k = q.name.trim();
+    if(!m[k]) m[k]=[];
+    m[k].push(q);
+  });
+  return m;
 }
 
-/** 依比例組卷 */
-function assembleExam(total, quick=false){
-  const counts = buildExamCounts(total, quick);
-  const pick = [];
-  for(const k of Object.keys(counts)){
-    const need = counts[k] || 0;
-    const pool = BANK[k] || [];
-    const selected = sampleN(pool, need);
-    pick.push(...selected);
-  }
-  // 若個別類不足，這裡可再補（目前假設足夠）
-  const selected = shuffle(pick).slice(0, total);
-  // 轉為題目
-  const questions = selected.map(c => makeQuestion(c, ALL_POOL));
-  return questions;
+/* ====== 顯示切換 ====== */
+function show(id){
+  ['#view-home','#view-quiz','#view-result'].forEach(sel=>$(sel).style.display='none');
+  $(id).style.display='block';
 }
 
-/** ============ 計時器 ============ */
-let timerId = null;
-function startTimer(seconds){
-  STATE.seconds = seconds;
-  renderTimer();
-  timerId = setInterval(()=>{
-    STATE.seconds--;
-    renderTimer();
-    if(STATE.seconds<=0){ clearInterval(timerId); submitQuiz(true); }
+/* ====== 作答頁渲染 ====== */
+function renderQuiz(){
+  const q = STATE.questions[STATE.idx];
+  $('#quizUser').textContent = STATE.user;
+  $('#quizTotal').textContent = STATE.total;
+  $('#quizTitle').textContent = `第 ${STATE.idx+1} / ${STATE.total} 題`;
+  $('#quizImg').src = q.image;
+
+  const box = $('#choices');
+  box.innerHTML='';
+  const labels = ['A','B','C','D'];
+  q.choices.forEach((txt,i)=>{
+    const id = `opt_${STATE.idx}_${i}`;
+    const wrap = document.createElement('label');
+    wrap.className = 'choice';
+    wrap.innerHTML = `
+      <input type="radio" name="q_${STATE.idx}" id="${id}" ${q.your===txt?'checked':''}/>
+      <span><b>${labels[i]}.</b> ${txt}</span>
+    `;
+    wrap.onclick = (e)=>{
+      // radio 設定
+      q.your = txt;
+      renderNavPalette();
+    };
+    box.appendChild(wrap);
+  });
+
+  // 進度條
+  $('#bar').style.width = `${(STATE.idx+1)/STATE.total*100}%`;
+
+  // 導覽 palette
+  renderNavPalette();
+}
+function renderNavPalette(){
+  const nav = $('#nav');
+  nav.innerHTML='';
+  STATE.questions.forEach((q,idx)=>{
+    const b = document.createElement('button');
+    b.textContent = (idx+1);
+    if (q.your) b.classList.add('answered');
+    if (idx===STATE.idx) b.style.outline='2px solid #2563eb';
+    b.onclick = ()=>{ STATE.idx=idx; renderQuiz(); };
+    nav.appendChild(b);
+  });
+}
+
+/* ====== 倒數 ====== */
+function startTimer(sec){
+  STATE.timer = sec;
+  if(STATE.timerId) clearInterval(STATE.timerId);
+  STATE.timerId = setInterval(()=>{
+    STATE.timer--;
+    if(STATE.timer<=0){
+      clearInterval(STATE.timerId);
+      submit();
+    }
   },1000);
 }
-function renderTimer(){
-  const s = STATE.seconds;
-  const m = Math.floor(s/60), ss = s%60;
-  $('#timer').textContent = `${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
-}
 
-/** ============ 渲染作答畫面 ============ */
-function renderQuiz(){
-  const i = STATE.idx, N = STATE.questions.length;
-  $('#qTitle').textContent = `第 ${i+1} / ${N} 題`;
-  const q = STATE.questions[i];
-  $('#qImg').src = q.image;
-  const ch = $('#choices'); ch.innerHTML='';
-  q.options.forEach((op,idx)=>{
-    const id = `opt_${i}_${idx}`;
-    const div = document.createElement('label');
-    div.className='choice';
-    div.innerHTML = `
-      <span class="ad">${String.fromCharCode(65+idx)}</span>
-      <input type="radio" name="q${i}" id="${id}">
-      <span>${op.text}</span>
-    `;
-    div.addEventListener('click', ()=>{
-      STATE.your[i] = op.text;
-      // 標記 palette
-      const btn = $(`#nav button[data-i="${i}"]`);
-      if(btn) btn.classList.add('answered');
-    }, {capture:true});
-    ch.appendChild(div);
-  });
-  // palette
-  const nav = $('#nav');
-  if(!nav.dataset.ready){
-    nav.innerHTML='';
-    for(let k=0;k<N;k++){
-      const b = document.createElement('button');
-      b.textContent = (k+1);
-      b.dataset.i = k;
-      b.addEventListener('click', ()=>{
-        STATE.idx = k; renderQuiz(); renderBar();
-      });
-      nav.appendChild(b);
-    }
-    nav.dataset.ready='1';
-  }
-  $(`#nav button[data-i="${i}"]`)?.classList.add('current');
-  // 進度條
-  renderBar();
-}
-function renderBar(){
-  const i = STATE.idx, N = STATE.questions.length;
-  $('#bar').style.width = `${((i+1)/N*100).toFixed(2)}%`;
-  // palette 畫面
-  $$('#nav button').forEach(b=>b.classList.remove('current'));
-  $(`#nav button[data-i="${i}"]`)?.classList.add('current');
-}
+/* ====== 交卷 ====== */
+function submit(){
+  if(STATE.timerId) clearInterval(STATE.timerId);
 
-/** ============ 交卷與結果 ============ */
-function submitQuiz(auto=false){
-  clearInterval(timerId);
-  const N = STATE.questions.length;
-  let correct = 0;
-  for(let i=0;i<N;i++){
-    const q = STATE.questions[i];
-    if(STATE.your[i] === q.answer) correct++;
-  }
-  const score = correct; // 每題 1 分
-  // 累計人數 +1
-  const key='horti_people';
-  const n = +(localStorage.getItem(key)||'0') + 1;
-  localStorage.setItem(key, n);
-  $('#peopleCount').textContent = String(n);
+  // 計分
+  let correct=0;
+  STATE.questions.forEach(q=>{ if(q.your===q.answer) correct++; });
+  const score = correct; // 每題 1 分，共 100 題
 
-  // 結果表
-  const tbody = document.createDocumentFragment();
-  for(let i=0;i<N;i++){
-    const q = STATE.questions[i];
+  // 累計人數（本機）
+  try{
+    const p = +localStorage.getItem('horti_people') || 0;
+    localStorage.setItem('horti_people', (p+1).toString());
+  }catch{}
+
+  // 渲染結果
+  $('#resName').textContent = `應試者：${STATE.user}`;
+  $('#resScore').textContent = `得分：${score} 分`;
+  $('#resVersion').textContent = `ver ${VER}`;
+
+  const tb = $('#tbody');
+  tb.innerHTML='';
+  STATE.questions.forEach((q,i)=>{
     const tr = document.createElement('tr');
-    const you = STATE.your[i] ?? '<span class="muted">未作答</span>';
-    const ok = (STATE.your[i] === q.answer);
+    const ok = q.your===q.answer;
     tr.innerHTML = `
-      <td>${i+1}</td>
-      <td><img src="${q.image}" alt="題圖" style="width:120px;height:80px;object-fit:cover;border-radius:8px;border:1px solid #e2e8f0"></td>
-      <td>${you}</td>
-      <td>${q.answer}</td>
-      <td>${ ok? '<span class="ok">✔ 正確</span>' : '<span class="ng">✘ 錯誤</span>'}</td>
+      <td style="padding:8px;border-bottom:1px solid var(--border)">${i+1}</td>
+      <td style="padding:8px;border-bottom:1px solid var(--border)">${q.your || '<span class="muted">未作答</span>'}</td>
+      <td style="padding:8px;border-bottom:1px solid var(--border)">${q.answer}</td>
+      <td style="padding:8px;border-bottom:1px solid var(--border);color:${ok?'#16a34a':'#dc2626'}">${ok?'✔ 正確':'✘ 錯誤'}</td>
     `;
-    tbody.appendChild(tr);
-  }
-  $('#resBody').innerHTML='';
-  $('#resBody').appendChild(tbody);
-  $('#resMeta').innerHTML = `
-    姓名／代號：<b>${STATE.user}</b>　
-    題數：<b>${N}</b>　
-    得分：<b>${score}</b>　
-    版本：ver ${QUIZ_VERSION}
-  `;
+    tb.appendChild(tr);
+  });
+
+  // 回首頁更新人數
+  const p = +localStorage.getItem('horti_people') || 0;
+  $('#people').textContent = p.toString();
+
   show('#view-result');
 }
 
-/** ============ 事件綁定 ============ */
-$('#btnPrev').addEventListener('click', ()=>{
-  if(STATE.idx>0){ STATE.idx--; renderQuiz(); }
-});
-$('#btnNext').addEventListener('click', ()=>{
-  if(STATE.idx<STATE.questions.length-1){ STATE.idx++; renderQuiz(); }
-});
-$('#btnSubmit').addEventListener('click', ()=> submitQuiz(false));
-$('#btnBack').addEventListener('click', ()=> show('#view-home'));
-$('#btnRestart').addEventListener('click', ()=>{
-  show('#view-home');
-});
+/* ====== 事件 ====== */
+$('#btnStart').onclick = ()=>{
+  const name = $('#inpName').value.trim() || '未署名';
+  const scope = $('#selCategory').value;    // ALL 或 某類
+  STATE.user = name;
 
-$('#btnStart').addEventListener('click', ()=>{
-  const user = $('#inpName').value.trim();
-  if(!user){ alert('請先輸入姓名／代號'); return; }
-  STATE.user = user;
-  STATE.quick = false;
-  STATE.total = 100;
-  STATE.questions = assembleExam(100,false);
-  STATE.your = Array(STATE.total).fill(null);
+  // 100 題（八類比例）
+  STATE.questions = buildExam(100, scope);
+  STATE.total = STATE.questions.length;
   STATE.idx = 0;
 
-  $('#quizUser').textContent = `考生：${user}`;
-  $('#quizInfo').textContent = `題數：100`;
-  $('#nav').innerHTML=''; $('#nav').dataset.ready='';
   show('#view-quiz');
   renderQuiz();
   startTimer(40*60);
-});
+};
+$('#btnQuick').onclick = ()=>{
+  const name = $('#inpName').value.trim() || '未署名';
+  const scope = $('#selCategory').value;
+  STATE.user = name;
 
-$('#btnQuick').addEventListener('click', ()=>{
-  const user = $('#inpName').value.trim() || '快速體驗';
-  STATE.user = user;
-  STATE.quick = true;
-  STATE.total = 10;
-  STATE.questions = assembleExam(10,true);
-  STATE.your = Array(STATE.total).fill(null);
+  // 快速體驗：10 題（按比例縮放）
+  STATE.questions = buildExam(10, scope);
+  STATE.total = STATE.questions.length;
   STATE.idx = 0;
 
-  $('#quizUser').textContent = `考生：${user}`;
-  $('#quizInfo').textContent = `題數：10`;
-  $('#nav').innerHTML=''; $('#nav').dataset.ready='';
   show('#view-quiz');
   renderQuiz();
-  startTimer(10*60); // 體驗 10 分鐘
-});
+  startTimer(10*60); // 體驗給 10 分鐘
+};
+$('#btnPrev').onclick = ()=>{
+  if(STATE.idx>0){ STATE.idx--; renderQuiz(); }
+};
+$('#btnNext').onclick = ()=>{
+  if(STATE.idx<STATE.total-1){ STATE.idx++; renderQuiz(); }
+};
+$('#btnSubmit').onclick = ()=>submit();
 
-/** ============ 初始化 ============ */
+/* ====== 初始化 ====== */
 (async function init(){
-  await loadQuestionsJSON();
-  // 累計人數顯示
-  $('#peopleCount').textContent = String(+(localStorage.getItem('horti_people')||'0'));
+  await loadQuestions();
 })();
 </script>
 </body>
