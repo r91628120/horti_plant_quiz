@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>園藝丙級術科識別線上模擬測驗</title>
+  <meta name="description" content="園藝丙級術科識別線上模擬測驗：100 題、40 分鐘、單選題。支援 questions.json 類別題庫（categories + A/B/C…），隨機抽題、前後翻題、即時計時與結果明細。" />
+  <style>
+    :root{
+      --bg:#f6f7fb; --card:#ffffff; --text:#1f2937; --muted:#6b7280;
+      --primary:#2563eb; --primary-2:#1d4ed8; --ok:#16a34a; --bad:#dc2626; --border:#e5e7eb;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background:linear-gradient(180deg,#f9fafb,#eef2f7 24%,#e6ebf2);
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+    }
+    .container{max-width:1100px;margin:0 auto;padding:20px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 6px 18px rgba(0,0,0,.06);padding:16px}
+    h1{margin:0 0 8px;font-size:26px}
+    h2{margin:0 0 8px;font-size:20px;color:#334155}
+    .sub{color:var(--muted);font-size:14px;margin-bottom:10px}
+    .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+    label{font-size:14px;color:#334155}
+    input[type="text"], select{
+      padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:#fff;color:var(--text);
+    }
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;
+      border:1px solid var(--border);background:#f1f5f9;color:var(--text);cursor:pointer;font-weight:600}
+    .btn:hover{background:#e5eefc;border-color:#c7d2fe}
+    .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+    .btn.primary:hover{background:var(--primary-2)}
+    .pill{display:inline-block;padding:4px 10px;border:1px solid var(--border);border-radius:999px;background:#f8fafc;color:#1f2937}
+    .progress{height:8px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-top:8px}
+    .progress>span{display:block;height:100%;background:linear-gradient(90deg,#2563eb,#60a5fa);width:0}
+    .quiz-img{width:100%;max-height:520px;object-fit:contain;border-radius:12px;background:#f8fafc;border:1px solid var(--border)}
+    .choices{display:grid;gap:10px;margin-top:12px}
+    .choice{display:flex;gap:10px;align-items:flex-start;padding:12px;border-radius:12px;border:1px solid var(--border);background:#f8fafc;cursor:pointer}
+    .choice:hover{background:#eef2ff}
+    .choice .tag{display:inline-block;min-width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;
+      background:#e0e7ff;color:#1e3a8a;font-weight:700;font-size:12px}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .palette{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    .palette button{min-width:36px;height:36px;border-radius:10px;border:1px solid var(--border);background:#fff;cursor:pointer}
+    .palette button.current{outline:2px solid var(--primary)}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;border-bottom:1px solid var(--border);text-align:left}
+    .ok{color:var(--ok);font-weight:700}
+    .ng{color:var(--bad);font-weight:700}
+    .notice{margin-top:10px;padding:10px 12px;border-radius:12px;background:#fff7ed;border:1px solid #fde68a;color:#92400e}
+    .muted{color:var(--muted)}
+    footer{margin-top:20px;color:var(--muted)}
+    .hr{height:1px;background:var(--border);margin:12px 0}
+    .hide{display:none}
+    @media (max-width:720px){
+      .row{flex-direction:column;align-items:stretch}
+      .toolbar{justify-content:space-between}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 首頁 A -->
+    <div id="view-home" class="card">
+      <h1>園藝丙級術科識別線上模擬測驗</h1>
+      <div class="sub">
+        資料來源：勞動部勞動力發展署技能檢定中心。本網站圖片僅供教育與非營利用途，著作權歸原權利人所有，嚴禁未經授權之商業使用。
+      </div>
+      <div class="notice">
+        測驗說明：本試題共測試 <b>100 題</b>，每題 1 分，總分 100 分，<b>考試時間 40 分鐘</b>。題型為單選題，須依試題圖片配合選項點選，正確點選者始給分；題目可前後閱視作答。
+      </div>
+
+      <div class="row" style="gap:12px;margin-top:12px">
+        <div>
+          <label>姓名/代號</label><br/>
+          <input id="inpName" type="text" placeholder="請輸入姓名或代號" style="min-width:220px"/>
+        </div>
+        <div>
+          <label>選擇題庫分類</label><br/>
+          <select id="selCat" style="min-width:260px"></select>
+        </div>
+        <div style="flex:1"></div>
+        <button class="btn primary" id="btnStart">▶ 開始測驗（100 題）</button>
+        <button class="btn" id="btnQuick">⚡ 快速體驗（10 題）</button>
+      </div>
+
+      <div class="row" style="gap:10px;margin-top:10px">
+        <span class="pill" id="badgeVersion">ver –</span>
+        <span class="pill">目前累計測驗人數：<b id="people">0</b> 人（本機）</span>
+        <span class="pill" id="badgeLoaded">題庫：–</span>
+      </div>
+      <div class="progress"><span id="progHome" style="width:0"></span></div>
+    </div>
+
+    <!-- 作答頁 B -->
+    <div id="view-quiz" class="card hide">
+      <div class="row" style="justify-content:space-between">
+        <div>
+          <span class="pill" id="badgeUser"></span>
+          <span class="pill" id="badgeCat"></span>
+          <span class="pill" id="badgeRemain"></span>
+          <span class="pill">計時：<b id="timer">40:00</b></span>
+        </div>
+        <div class="muted">目前累計測驗人數：<b id="people2">0</b> 人（本機）</div>
+      </div>
+      <div class="hr"></div>
+
+      <div class="row" style="align-items:flex-start">
+        <div style="flex:1">
+          <div id="qno" class="muted" style="margin:6px 0 8px">第 1 / 100 題</div>
+          <img id="qimg" class="quiz-img" alt="題圖" src="" onerror="this.src='https://placehold.co/960x640?text=Image+Unavailable'"/>
+          <div class="choices" id="choices"></div>
+
+          <div class="toolbar">
+            <button class="btn" id="btnPrev">← 上一題</button>
+            <button class="btn" id="btnNext">下一題 →</button>
+            <div style="flex:1"></div>
+            <button class="btn primary" id="btnSubmit">交卷</button>
+          </div>
+          <div class="palette" id="palette"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 結果頁 C -->
+    <div id="view-result" class="card hide">
+      <h2>作答結果</h2>
+      <div class="row" style="gap:8px;margin:6px 0 12px">
+        <span class="pill" id="resUser"></span>
+        <span class="pill" id="resCat"></span>
+        <span class="pill" id="resScore"></span>
+        <span class="pill" id="resVersion"></span>
+      </div>
+      <div class="notice">
+        資料來源：勞動部勞動力發展署技能檢定中心。本網站圖片僅供教育與非營利用途，著作權歸原權利人所有，嚴禁未經授權之商業使用。
+      </div>
+      <div class="hr"></div>
+      <div class="muted" style="margin:6px 0 10px">（點擊題號可回看題圖）</div>
+      <table id="tbl">
+        <thead><tr><th style="width:64px">題號</th><th style="width:140px">縮圖</th><th>你的答案</th><th>正解</th><th style="width:90px">判定</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div class="row" style="gap:10px;margin-top:12px">
+        <button class="btn" id="btnBackHome">回到首頁</button>
+      </div>
+    </div>
+
+    <footer class="container" style="padding:0 2px">
+      <div class="muted">© 2025 Horti ID Quiz · 靜態前端（支援 questions.json 類別題庫）</div>
+    </footer>
+  </div>
+
+<script>
+// ====== 工具 ======
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const shuffle=arr=>arr.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+const sampleN=(arr,n)=>shuffle(arr.slice()).slice(0,Math.min(n,arr.length));
+const AD = ["A","B","C","D"];
+
+// ====== 狀態 ======
+let QUIZ_VERSION='v0';
+let DATA=null;          // 讀入的 questions.json
+let STATE={};          // 目前測驗狀態
+let TIMER_ID=null;     // 倒數計時器
+
+// 人數本機統計
+function getPeople(){ return +(localStorage.getItem('quiz_people_count')||'0'); }
+function setPeople(v){ localStorage.setItem('quiz_people_count', String(v)); }
+function renderPeople(){ $('#people').textContent = getPeople().toString(); $('#people2').textContent=$('#people').textContent; }
+
+// ====== 載入題庫 ======
+async function loadQuestions(){
+  const badge = $('#badgeLoaded');
+  try{
+    const res = await fetch('questions.json',{cache:'no-store'});
