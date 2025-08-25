@@ -1,443 +1,400 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hant">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-
-<title>園藝丙級術科識別線上模擬測驗｜100題｜40分鐘｜Horti ID Quiz</title>
-<meta name="description" content="園藝丙級術科識別線上模擬測驗：依題庫分為 8 類（果樹、蔬菜、水生、蔓性、草本、灌木、喬木、資材），依比例隨機出題共 100 題，每題 1 分、限時 40 分鐘，題型為圖片配合選項單選。" />
-<meta name="keywords" content="園藝丙級, 術科, 植物識別, 模擬測驗, 園藝作物, 園藝題庫, 農業職能, 技能檢定" />
-<meta name="robots" content="index,follow" />
-<link rel="canonical" href="https://r91628120.github.io/horti_plant_quiz/" />
-
-<meta property="og:type" content="website" />
-<meta property="og:title" content="園藝丙級術科識別線上模擬測驗｜100題｜40分鐘" />
-<meta property="og:description" content="8 類題庫按比例出題，共 100 題，每題 1 分、限時 40 分鐘，題型為圖片配合選項單選。支援手機／電腦作答。" />
-<meta property="og:url" content="https://r91628120.github.io/horti_plant_quiz/" />
-<meta property="og:site_name" content="Horti ID Quiz" />
-
-<style>
-  :root{
-    --brand:#2563eb;
-    --text:#0f172a;
-    --muted:#475569;
-    --bg:#f8fafc;
-    --card:#ffffff;
-    --ok:#16a34a;
-    --err:#dc2626;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Noto Sans TC",Arial;
-       color:var(--text);background:var(--bg)}
-  .container{max-width:1100px;margin:0 auto;padding:24px}
-  .card{background:var(--card);border-radius:14px;box-shadow:0 6px 24px rgba(2,6,23,.06);padding:24px}
-  h1{font-size:32px;margin:0 0 16px}
-  .muted{color:var(--muted)}
-  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
-  input[type=text]{width:100%;padding:14px 16px;border:2px solid #e2e8f0;border-radius:12px;font-size:18px}
-  .btn{padding:14px 22px;border-radius:12px;border:none;background:var(--brand);color:#fff;font-weight:700;
-       cursor:pointer;font-size:18px;box-shadow:0 6px 18px rgba(37,99,235,.25)}
-  .btn.secondary{background:#0ea5e9}
-  .btn.ghost{background:#e2e8f0;color:#111827}
-  .badge{display:inline-block;padding:4px 10px;border-radius:9999px;background:#e2e8f0;color:#111827;font-size:14px}
-  .note{background:#f1f5f9;padding:12px 14px;border-radius:10px}
-  .grid{display:grid;gap:18px}
-  .grid-2{grid-template-columns:1fr 1fr}
-  .hide{display:none}
-  .titleBar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-  .counter{font-weight:700}
-  .progress{height:8px;background:#e2e8f0;border-radius:9999px;overflow:hidden}
-  .progress > div{height:100%;background:var(--brand);width:0%;}
-  .imgWrap{border:3px solid #ef4444;border-radius:10px;overflow:hidden;max-height:520px;display:flex;justify-content:center}
-  .imgWrap img{max-width:100%;height:auto;display:block}
-  .opt{display:flex;align-items:center;gap:10px;border:2px solid #e2e8f0;border-radius:12px;padding:12px 14px;cursor:pointer}
-  .opt:hover{background:#f8fafc}
-  .opt input{transform:scale(1.2)}
-  .opt-label{font-weight:700;margin-right:4px}
-  .navRow{display:flex;gap:12px;margin-top:12px}
-  .numberPad{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-  .numberPad button{padding:8px 12px;border:1px solid #cbd5e1;background:#fff;border-radius:8px;cursor:pointer}
-  .resultTable{width:100%;border-collapse:collapse}
-  .resultTable th,.resultTable td{padding:10px;border-bottom:1px solid #e2e8f0}
-  .ok{color:var(--ok);font-weight:700}
-  .err{color:var(--err);font-weight:700}
-  footer{color:var(--muted);text-align:center;margin:24px 0}
-  @media (max-width:900px){
-    .grid-2{grid-template-columns:1fr}
-  }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>園藝丙級術科識別線上模擬測驗</title>
+  <meta name="description" content="園藝丙級術科識別線上模擬測驗：100 題、40 分鐘，圖片單選題。題庫來源 Cloudinary，依 8 類比例抽題。" />
+  <style>
+    :root{
+      --p:#2563eb; --bg:#f6f7fb; --card:#fff; --muted:#64748b; --ok:#16a34a; --warn:#eab308;
+    }
+    html,body{margin:0;font-family:system-ui,-apple-system,"Noto Sans TC",Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:#111}
+    .wrap{max-width:1100px;margin:40px auto;padding:0 16px}
+    .card{background:var(--card);border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.08);padding:22px}
+    h1{font-size:30px;margin:0 0 10px}
+    .muted{color:var(--muted)}
+    .row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+    input[type=text]{padding:12px 14px;border:2px solid #e5e7eb;border-radius:10px;min-width:260px;font-size:16px}
+    select{padding:12px;border-radius:10px;border:2px solid #e5e7eb}
+    .btn{background:var(--p);color:#fff;border:0;border-radius:12px;padding:12px 18px;font-size:16px;cursor:pointer}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+    .btn.ghost{background:#e5e7eb;color:#111}
+    .pill{display:inline-block;background:#eef2ff;color:#3730a3;border-radius:999px;padding:6px 10px}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .qimg{width:100%;aspect-ratio:16/10;background:#e5e7eb;border-radius:12px;object-fit:contain}
+    .opt{border:2px solid #e5e7eb;border-radius:12px;padding:10px 12px;display:flex;gap:10px;align-items:center;cursor:pointer}
+    .opt input{transform:scale(1.1)}
+    .opt.correct{border-color:var(--ok)}
+    .opt.wrong{border-color:#ef4444}
+    .toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:10px}
+    .timer{font-weight:700}
+    .footer{margin-top:30px;color:var(--muted);font-size:14px}
+    .progress{height:8px;background:#e5e7eb;border-radius:999px;overflow:hidden}
+    .progress>span{display:block;height:100%;background:var(--p);width:0%}
+  </style>
 </head>
 <body>
-<div class="container">
-
-  <!-- A. 首頁 -->
-  <section id="page-home" class="card">
+<div class="wrap">
+  <!-- 首頁 A -->
+  <section id="home" class="card">
     <h1>園藝丙級術科識別線上模擬測驗</h1>
+    <p class="muted">資料來源：勞動部勞動力發展署技能檢定中心。本網站圖片僅供教育與非營利用途，著作權歸原權利人所有，嚴禁未經授權之商業使用。</p>
+    <p class="muted">測驗說明：本試題共測試 <b>100 題</b>，每題 1 分，總分 100 分，考試時間 <b>40 分鐘</b>。題型為單選題，需依試題圖片配合選項點選，正確點選者始給分；題目可前後閱視作答。</p>
 
-    <div class="note muted" style="margin-bottom:12px">
-      <div><strong>資料來源：</strong>勞動部勞動力發展署技能檢定中心。本網站圖片僅供教育與非營利用途，著作權歸原權利人所有，<strong>嚴禁未經授權之商業使用</strong>。</div>
+    <div class="row" style="margin:12px 0 6px">
+      <input id="nickname" type="text" placeholder="請輸入姓名或代號" />
+      <select id="paperMode">
+        <option value="all">全部題庫（依比例組卷）</option>
+      </select>
     </div>
 
-    <div class="note" style="margin-bottom:16px">
-      <strong>測驗說明：</strong>本試題共測試 <strong>100 題</strong>，每題 <strong>1 分</strong>，總分 <strong>100 分</strong>，考試時間 <strong>40 分鐘</strong>。題型為單選題，需依試題圖片配合選項點選，正確點選者始給分，題目可前後閱視作答。
-    </div>
-
-    <div class="grid grid-2">
-      <div>
-        <label class="muted">姓名 / 代號</label>
-        <input id="input-name" type="text" placeholder="請輸入姓名或代號">
-      </div>
-      <div>
-        <div class="muted">版本：<span id="ver-badge" class="badge">載入中…</span></div>
-        <div class="muted" style="margin-top:8px">目前累計測驗人數：<span id="people" class="counter">0</span> 人（本機）</div>
-        <div class="muted" style="margin-top:4px">題庫：<span id="poolHint" class="badge">載入中…</span>（共 8 類）</div>
-      </div>
-    </div>
-
-    <div class="row" style="margin-top:18px">
-      <button class="btn" id="btn-start">▶ 開始測驗（100 題）</button>
-      <button class="btn secondary" id="btn-quick">⚡ 快速體驗（10 題）</button>
-    </div>
-  </section>
-
-  <!-- B. 作答頁 -->
-  <section id="page-exam" class="card hide">
-    <div class="titleBar">
-      <div class="row">
-        <div class="badge">考生：<span id="info-who">-</span></div>
-        <div class="badge">題數：<span id="info-total">0</span></div>
-        <div class="badge">倒數：<span id="info-time">--:--</span></div>
-      </div>
-      <div class="progress" style="width:40%"><div id="progress-bar"></div></div>
-    </div>
-
-    <h2 style="margin-top:6px">第 <span id="q-idx">1</span> / <span id="q-total">0</span> 題</h2>
-
-    <div class="imgWrap" style="margin:10px 0 16px">
-      <img id="q-img" alt="題目圖片" src="">
-    </div>
-
-    <div id="options" class="grid"></div>
-
-    <div class="navRow">
-      <button class="btn ghost" id="btn-prev">← 上一題</button>
-      <button class="btn ghost" id="btn-next">下一題 →</button>
-      <button class="btn" id="btn-submit">交卷</button>
-    </div>
-
-    <div class="muted" style="margin-top:12px">題目導覽</div>
-    <div id="pager" class="numberPad"></div>
-  </section>
-
-  <!-- C. 結果頁 -->
-  <section id="page-result" class="card hide">
-    <h2>測驗結果</h2>
-    <div class="note" style="margin-bottom:12px">
-      姓名 / 代號：<strong id="r-name">-</strong>　
-      題數：<strong id="r-count">0</strong>　
-      得分：<strong id="r-score">0</strong>　
-      版本：<span id="r-ver" class="badge">-</span>
-    </div>
-
-    <div class="grid">
-      <table class="resultTable">
-        <thead><tr>
-          <th>#</th><th>題圖</th><th>你的答案</th><th>正確答案</th><th>判定</th>
-        </tr></thead>
-        <tbody id="r-rows"></tbody>
-      </table>
+    <div class="row" style="margin-top:8px">
+      <span class="pill">ver <span id="ver"></span></span>
+      <span class="pill">目前累計測驗人數：<span id="pv">0</span> 人（本機）</span>
+      <span class="pill">題庫：<span id="poolStat">–</span></span>
     </div>
 
     <div class="row" style="margin-top:16px">
-      <button class="btn ghost" id="btn-home">回首頁</button>
-      <button class="btn" id="btn-retry">再測一次</button>
+      <button id="startBtn" class="btn">開始測驗（100 題）</button>
+      <button id="try10" class="btn ghost">快速體驗（10 題）</button>
     </div>
   </section>
 
-  <footer>© 2025 Horti 凡事皆正面 Quiz · 僅供教學示範（支援 <code>questions.json</code> 類別題庫）</footer>
+  <!-- 作答頁 B -->
+  <section id="exam" class="card" style="display:none">
+    <div class="toolbar">
+      <div class="row">
+        <span class="pill">考生：<span id="who"></span></span>
+        <span class="pill">題數：<span id="qIdx">1</span> / <span id="qTotal">0</span></span>
+      </div>
+      <div class="timer">⏱ <span id="left">40:00</span></div>
+    </div>
+    <div class="progress" style="margin:12px 0"><span id="bar"></span></div>
+
+    <h2 id="qTitle" style="margin:12px 0 8px">第 1 / 0 題</h2>
+    <img id="qImage" class="qimg" alt="題目圖片" />
+    <div id="opts" class="grid-2" style="margin-top:10px"></div>
+
+    <div class="toolbar" style="margin-top:14px">
+      <div class="row">
+        <button id="prev" class="btn ghost">← 上一題</button>
+        <button id="next" class="btn ghost">下一題 →</button>
+      </div>
+      <button id="submit" class="btn">交卷</button>
+    </div>
+  </section>
+
+  <!-- 結果頁 C -->
+  <section id="result" class="card" style="display:none">
+    <h2>測驗結果</h2>
+    <p>姓名／代號：<b id="rWho"></b>　題數：<b id="rCount"></b>　得分：<b id="rScore"></b>　版本：<span id="rVer"></span></p>
+    <div id="rTable"></div>
+    <div class="row" style="margin-top:16px">
+      <button id="goHome" class="btn ghost">回首頁</button>
+      <button id="retry" class="btn">再測一次</button>
+    </div>
+  </section>
+
+  <p class="footer">© 2025 Horti ID Quiz．僅供教學示範（支援 <code>questions.json</code> 類別題庫）</p>
 </div>
 
 <script>
-/* ================= 基本與資料 ================= */
-const categoryRules100 = {
-  "fruit": 20,
-  "vegetables": 20,
-  "aquatic plants": 4,
-  "vine plants": 6,
-  "herbaceous plants": 20,
-  "shrub": 10,
-  "trees": 10,
-  "materials": 10
-};
-const QUICK_TOTAL = 10;
-const QUICK_TIME_MIN = 8;     // 快速體驗 10 題 → 8 分鐘
-const FULL_TIME_MIN  = 40;    // 正式 100 題 → 40 分鐘
+const VERSION = new Date().toISOString().slice(0,16).replace('T','-').replace(':','-');
+document.getElementById('ver').textContent = 'v' + VERSION;
 
-let JSON_VERSION = "local";
-let ALL = {};                 // {category: [ {name, image}, ... ]}
-let EXAM = [];                // 組卷後題目
-let ANSW = [];                // 使用者選項 index（0..3），未作答為 -1
-let WHO  = "";
-let TIMER = null;
-let TOTAL_SECONDS = 0;
-let CUR = 0;
-let isQuick = false;
-
-const elHome   = document.getElementById('page-home');
-const elExam   = document.getElementById('page-exam');
-const elResult = document.getElementById('page-result');
-
-/* ============== UI 工具 ============== */
-function show(id){
-  for (const sec of [elHome, elExam, elResult]) sec.classList.add('hide');
-  document.getElementById(id).classList.remove('hide');
+// ===== 資料載入與正規化 =====
+async function loadQuestions() {
+  const res = await fetch('questions.json?_=' + Date.now());
+  const data = await res.json();
+  return normalize(data);
 }
-function shuffle(arr){
-  for (let i=arr.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [arr[i],arr[j]] = [arr[j],arr[i]];
+
+// 支援兩種格式：
+// 1) [{ name, image }]
+// 2) { categories: [{ key,name,items:[{ name, image|url|secure_url }] }] }
+function normalize(data){
+  const out = { categories: [] };
+
+  if (Array.isArray(data)) {
+    // 舊格式 → 全部歸在 misc
+    const items = data.map(x => ({
+      name: x.name,
+      image: x.image || x.url || x.secure_url || ''
+    })).filter(x=>x.name && x.image);
+    out.categories.push({ key:'misc', name:'全部', items });
+    return out;
   }
+
+  if (data && Array.isArray(data.categories)) {
+    for (const c of data.categories) {
+      const items = (c.items||[]).map(x => ({
+        name: x.name,
+        image: x.image || x.url || x.secure_url || ''
+      })).filter(x=>x.name && x.image);
+      if (items.length) out.categories.push({ key:c.key||c.name, name:c.name||c.key, items });
+    }
+    return out;
+  }
+
+  // 萬一格式不符，回傳空
+  return { categories: [] };
 }
-function pickRandom(arr,n){
-  const copy = [...arr];
-  const out=[];
-  for (let i=0;i<n && copy.length>0;i++){
-    const idx = Math.floor(Math.random()*copy.length);
-    out.push(copy.splice(idx,1)[0]);
+
+// ===== 依比例組卷 =====
+const RATIO = {
+  'fruit': 20,
+  'vegetables': 20,
+  'aquatic_plants': 4,
+  'vine_plants': 6,
+  'herbaceous_plants': 20,
+  'shrub': 10,
+  'trees': 10,
+  'materials': 10
+};
+// 類別鍵的對照（容錯：若 key 用不同命名）
+const KEY_ALIAS = {
+  'fruit':'fruit',
+  'fruits':'fruit',
+  'vegetables':'vegetables',
+  'vegs':'vegetables',
+  'aquatic plants':'aquatic_plants',
+  'aquatic_plants':'aquatic_plants',
+  'vine plants':'vine_plants',
+  'vine_plants':'vine_plants',
+  'herbaceous plants':'herbaceous_plants',
+  'herbaceous_plants':'herbaceous_plants',
+  'shrub':'shrub',
+  'shrubs':'shrub',
+  'trees':'trees',
+  'tree':'trees',
+  'materials':'materials',
+  'material':'materials'
+};
+
+function aliasKey(k){
+  const key = (k||'').toLowerCase().trim();
+  return KEY_ALIAS[key] || key;
+}
+
+function pickN(arr, n){
+  const a = arr.slice();
+  const out = [];
+  while (a.length && out.length < n){
+    const i = Math.floor(Math.random()*a.length);
+    out.push(a.splice(i,1)[0]);
   }
   return out;
 }
 
-/* ============== 題庫載入 ============== */
-async function loadQuestions(){
-  const r = await fetch('questions.json',{cache:'no-store'});
-  const data = await r.json();
-  JSON_VERSION = data.version || JSON_VERSION;
-  ALL = data.categories || {};
-  // 顯示首頁資訊
-  document.getElementById('ver-badge').textContent = 'ver ' + JSON_VERSION;
-  const cats = Object.keys(ALL);
-  document.getElementById('poolHint').textContent = (cats.length ? cats.join('、') : '無') + '（共 ' + cats.length + ' 類）';
-}
-
-/* ============== 組卷（依 8 類比例） ============== */
-function buildExam(total){
-  // 依目標總題數（100 或 10）縮放每類數量
-  const rule = {};
-  const sum = Object.values(categoryRules100).reduce((a,b)=>a+b,0); // 100
-  for (const [cat, count] of Object.entries(categoryRules100)){
-    rule[cat] = Math.round(count / sum * total);
-  }
-  // 若四捨五入造成總數不等於 total，做微調
-  let diff = total - Object.values(rule).reduce((a,b)=>a+b,0);
-  while(diff !== 0){
-    for (const cat of Object.keys(rule)){
-      if (diff === 0) break;
-      rule[cat] += (diff>0?1:-1);
-      diff += (diff>0?-1:1);
-    }
+function buildExamPool(normData, total=100){
+  // 先把類別依 alias 整理到 map
+  const map = {};
+  for(const c of normData.categories){
+    const key = aliasKey(c.key);
+    if(!map[key]) map[key]=[];
+    map[key] = map[key].concat(c.items);
   }
 
-  // 收集題目
+  // 依比例抽題
   const paper = [];
-  for (const [cat, count] of Object.entries(rule)){
-    const pool = ALL[cat] || [];
-    if (pool.length === 0) continue;
-    const take = Math.min(count, pool.length);
-    const chosen = pickRandom(pool, take);
-    // 補上類別資訊
-    chosen.forEach(q => paper.push({...q, category:cat}));
+  for(const k in RATIO){
+    const need = RATIO[k];
+    const bag = map[k] || [];
+    if (!bag.length) continue;
+    paper.push(...pickN(bag, Math.min(need, bag.length)));
   }
-  // 有可能不足，從所有類再補
+
+  // 若硬是湊不到 100（某些類別圖片不足），就從全部補滿
   if (paper.length < total){
-    const allFlat = Object.values(ALL).flat();
-    const need = total - paper.length;
-    const extra = pickRandom(allFlat, need);
-    extra.forEach(q => paper.push({...q, category: q.category || 'misc'}));
+    const all = Object.values(map).flat();
+    // 避免重複（用 image 當 key）
+    const used = new Set(paper.map(x=>x.image));
+    const candidates = all.filter(x=>!used.has(x.image));
+    paper.push(...pickN(candidates, Math.max(0, total - paper.length)));
   }
-  shuffle(paper);
-  // 轉為考試題型（加上選項）
-  const nameSet = new Set();
-  for (const arr of Object.values(ALL)) arr.forEach(x => nameSet.add(x.name));
-  const allNames = [...nameSet];
 
-  const out = paper.map(item => makeQuestion(item, allNames));
-  return out.slice(0, total);
+  // 最後再洗牌
+  return pickN(paper, Math.min(total, paper.length));
 }
 
-/* 依題目建立 1 正確 + 3 錯誤的選項 */
-function makeQuestion(correctItem, allNames){
-  const correctName = correctItem.name;
-  const wrongPool = allNames.filter(n => n !== correctName);
-  shuffle(wrongPool);
-  const distractors = wrongPool.slice(0,3);
-  const ops = [correctName, ...distractors];
-  shuffle(ops);
-  const correctIndex = ops.indexOf(correctName);
-  return {
-    image: correctItem.image,
-    answer: correctName,
-    options: ops,             // ['名1','名2','名3','名4']
-    correctIndex,             // 0..3
-    picked: -1                // 使用者作答
-  };
+function buildOptions(correct, bag){
+  // 從不同名稱抽 3 個錯誤
+  const pool = bag.filter(x=>x.name !== correct.name);
+  const wrong3 = pickN(pool, 3);
+  const options = [
+    {label:'A', text:correct.name, correct:true},
+    ...wrong3.map((w,i)=>({label:String.fromCharCode(66+i), text:w.name, correct:false}))
+  ];
+  // 打散選項
+  return pickN(options, options.length);
 }
 
-/* ============== 考試控制 ============== */
-function startExam(quick=false){
-  WHO = (document.getElementById('input-name').value || '').trim() || '匿名';
-  if (!Object.keys(ALL).length){
-    alert('尚未載入題庫，請稍候或檢查 questions.json');
-    return;
-  }
-  isQuick = quick;
-  const total = quick ? QUICK_TOTAL : 100;
-  EXAM = buildExam(total);
-  ANSW = new Array(EXAM.length).fill(-1);
-  CUR = 0;
+// ====== 畫面控制 ======
+const $ = sel => document.querySelector(sel);
+const show = id => {
+  $('#home').style.display='none';
+  $('#exam').style.display='none';
+  $('#result').style.display='none';
+  $(id).style.display='';
+};
 
-  // 計時
+// 狀態
+let DATA = null;          // 正規化後的 {categories}
+let EXAM = [];            // 100 題
+let CHOICES = [];         // 每題選項（含 A-D 與正誤）
+let ANSW = [];            // 使用者答案（label）
+let IDX = 0;              // 目前題號
+let TIMER = null;         // setInterval
+let LEFT = 40*60;         // 秒
+let NICK = '';
+
+function renderHomeStat(){
+  // 顯示題庫總數（全部）
+  const total = (DATA?.categories||[]).reduce((s,c)=>s+(c.items?.length||0),0);
+  $('#poolStat').textContent = total ? total+' 張圖' : '–';
+
+  // 累計人數（本機）
+  const pv = Number(localStorage.getItem('horti_pv')||'0');
+  $('#pv').textContent = pv;
+}
+
+function startTimer(){
   clearInterval(TIMER);
-  TOTAL_SECONDS = (quick?QUICK_TIME_MIN:FULL_TIME_MIN) * 60;
+  const tick = ()=>{
+    LEFT--;
+    if(LEFT<0){ submitPaper(); return; }
+    const m = String(Math.floor(LEFT/60)).padStart(2,'0');
+    const s = String(LEFT%60).padStart(2,'0');
+    $('#left').textContent = `${m}:${s}`;
+    $('#bar').style.width = (100 - LEFT/(40*60)*100) + '%';
+  };
   tick();
-  TIMER = setInterval(tick, 1000);
-
-  // 人數 +1（本機）
-  const k = 'horti_exam_people';
-  const now = +(localStorage.getItem(k) || 0) + 1;
-  localStorage.setItem(k, now);
-
-  // 畫面
-  document.getElementById('info-who').textContent = WHO;
-  document.getElementById('info-total').textContent = EXAM.length;
-  document.getElementById('q-total').textContent = EXAM.length;
-  buildPager();
-  renderQuestion();
-  show('page-exam');
-}
-function tick(){
-  const m = Math.floor(TOTAL_SECONDS/60);
-  const s = TOTAL_SECONDS%60;
-  document.getElementById('info-time').textContent = String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
-  const done = ANSW.filter(x=>x>=0).length;
-  document.getElementById('progress-bar').style.width = (done/EXAM.length*100).toFixed(1)+'%';
-  if (TOTAL_SECONDS<=0){
-    clearInterval(TIMER);
-    submitExam();
-  }
-  TOTAL_SECONDS--;
+  TIMER = setInterval(tick,1000);
 }
 
-/* 逐題渲染 */
-function renderQuestion(){
-  const q = EXAM[CUR];
-  document.getElementById('q-idx').textContent = CUR+1;
-  document.getElementById('q-img').src = q.image;
-  const wrap = document.getElementById('options');
-  wrap.innerHTML = '';
-  const letters = ['A','B','C','D'];
-  q.options.forEach((opt, i)=>{
+function renderQuestion(i){
+  IDX = i;
+  $('#qIdx').textContent = (i+1);
+  $('#qTotal').textContent = EXAM.length;
+  $('#qTitle').textContent = `第 ${i+1} / ${EXAM.length} 題`;
+  $('#qImage').src = EXAM[i].image;
+
+  const opts = CHOICES[i];
+  const box = $('#opts');
+  box.innerHTML = '';
+  opts.forEach(o=>{
+    const id = `q${i}_${o.label}`;
     const div = document.createElement('label');
     div.className = 'opt';
-    div.innerHTML = `
-      <input type="radio" name="opt" ${q.picked===i?'checked':''}/>
-      <span class="opt-label">${letters[i]}.</span>
-      <span>${opt}</span>`;
-    div.addEventListener('click', ()=>{
-      q.picked = i;
-      ANSW[CUR] = i;
-      updatePagerButton(CUR);
-    });
-    wrap.appendChild(div);
+    div.innerHTML = `<input type="radio" name="q${i}" id="${id}" value="${o.label}"><b>${o.label}</b>．${o.text}`;
+    box.appendChild(div);
+  });
+
+  // 回填已作答
+  if (ANSW[i]){
+    const r = document.querySelector(`input[name="q${i}"][value="${ANSW[i]}"]`);
+    if (r) r.checked = true;
+  }
+
+  // 監聽
+  box.addEventListener('change', (e)=>{
+    if (e.target && e.target.name === `q${i}`){
+      ANSW[i] = e.target.value;
+    }
   });
 }
 
-/* 題號導覽 */
-function buildPager(){
-  const p = document.getElementById('pager');
-  p.innerHTML='';
-  for (let i=0;i<EXAM.length;i++){
-    const b = document.createElement('button');
-    b.textContent = (i+1);
-    b.id = 'pg-'+i;
-    b.addEventListener('click',()=>{CUR=i;renderQuestion();});
-    p.appendChild(b);
-  }
-}
-function updatePagerButton(i){
-  const b = document.getElementById('pg-'+i);
-  if (!b) return;
-  b.style.background = (ANSW[i] >= 0 ? '#dcfce7' : '#fff');
-}
-
-/* 交卷 */
-function submitExam(){
+function submitPaper(){
   clearInterval(TIMER);
+  // 算分：答對即 1 分
   let score = 0;
   const rows = [];
-  const letters = ['A','B','C','D'];
+  for (let i=0;i<EXAM.length;i++){
+    const opt = CHOICES[i];
+    const correct = opt.find(o=>o.correct).label;
+    const mine = ANSW[i] || '-';
+    if (mine === correct) score++;
+    rows.push({i:i+1, img:EXAM[i].image, my:mine, ok:correct});
+  }
 
-  EXAM.forEach((q, i)=>{
-    const ok = q.picked === q.correctIndex;
-    if (ok) score += 1;
-    rows.push({
-      i: i+1,
-      img: q.image,
-      mine: q.picked>=0 ? `${letters[q.picked]}. ${q.options[q.picked]}` : '(未作答)',
-      ans: `${letters[q.correctIndex]}. ${q.options[q.correctIndex]}`,
-      pass: ok
-    });
-  });
+  // 顯示結果
+  $('#rWho').textContent = NICK;
+  $('#rCount').textContent = EXAM.length;
+  $('#rScore').textContent = score;
+  $('#rVer').textContent = 'v'+VERSION;
 
-  // 畫結果
-  document.getElementById('r-name').textContent = WHO;
-  document.getElementById('r-count').textContent = EXAM.length;
-  document.getElementById('r-score').textContent = score;
-  document.getElementById('r-ver').textContent = 'ver ' + JSON_VERSION;
-
-  const tb = document.getElementById('r-rows');
-  tb.innerHTML='';
+  const tbl = ['<table border="0" cellspacing="0" cellpadding="8" style="width:100%;border-collapse:collapse">',
+               '<tr style="background:#f8fafc"><th>#</th><th>題圖</th><th>你的答案</th><th>正確答案</th></tr>'];
   rows.forEach(r=>{
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
+    tbl.push(`<tr>
       <td>${r.i}</td>
-      <td><img src="${r.img}" alt="" style="max-width:120px;border-radius:8px"></td>
-      <td>${r.mine}</td>
-      <td>${r.ans}</td>
-      <td class="${r.pass?'ok':'err'}">${r.pass?'✔ 正確':'✘ 錯誤'}</td>`;
-    tb.appendChild(tr);
+      <td><img src="${r.img}" style="width:160px;height:100px;object-fit:cover;border:1px solid #e5e7eb;border-radius:8px"/></td>
+      <td>${r.my}</td>
+      <td>${r.ok}</td>
+    </tr>`);
   });
+  tbl.push('</table>');
+  $('#rTable').innerHTML = tbl.join('');
 
-  show('page-result');
+  // PV +1（本機）
+  const pv = Number(localStorage.getItem('horti_pv')||'0') + 1;
+  localStorage.setItem('horti_pv', String(pv));
+
+  show('#result');
 }
 
-/* ============== 綁定事件 & 初始 ============== */
-document.getElementById('btn-prev').addEventListener('click', ()=>{
-  if (CUR>0){CUR--;renderQuestion();}
-});
-document.getElementById('btn-next').addEventListener('click', ()=>{
-  if (CUR<EXAM.length-1){CUR++;renderQuestion();}
-});
-document.getElementById('btn-submit').addEventListener('click', submitExam);
+function startExam(total=100){
+  if (!DATA || !DATA.categories?.length){
+    alert('題庫載入失敗，請稍後再試。');
+    return;
+  }
+  // 依比例抽題
+  EXAM = buildExamPool(DATA, total);
+  if (!EXAM.length){
+    alert('題庫為空，請確認 questions.json。');
+    return;
+  }
+  // 為每題建選項
+  const all = DATA.categories.flatMap(c=>c.items);
+  CHOICES = EXAM.map(q => buildOptions(q, all));
+  ANSW = new Array(EXAM.length).fill(null);
+  LEFT = 40*60;
 
-document.getElementById('btn-home').addEventListener('click', ()=>show('page-home'));
-document.getElementById('btn-retry').addEventListener('click', ()=>{
-  show('page-home');
-});
+  $('#who').textContent = NICK;
+  $('#qTotal').textContent = EXAM.length;
 
-document.getElementById('btn-start').addEventListener('click', ()=>startExam(false));
-document.getElementById('btn-quick').addEventListener('click', ()=>startExam(true));
-
-/* 累計測驗人數（本機） */
-function updatePeople(){
-  const n = +(localStorage.getItem('horti_exam_people') || 0);
-  document.getElementById('people').textContent = n;
+  show('#exam');
+  renderQuestion(0);
+  startTimer();
 }
 
-/* 啟動 */
-(async function init(){
-  updatePeople();
-  await loadQuestions();
+// ===== 事件 =====
+document.getElementById('startBtn').addEventListener('click', ()=>{
+  NICK = $('#nickname').value.trim() || '匿名';
+  startExam(100);
+});
+document.getElementById('try10').addEventListener('click', ()=>{
+  NICK = $('#nickname').value.trim() || '匿名';
+  startExam(10);
+});
+document.getElementById('prev').addEventListener('click', ()=>{ if (IDX>0) renderQuestion(IDX-1); });
+document.getElementById('next').addEventListener('click', ()=>{ if (IDX<EXAM.length-1) renderQuestion(IDX+1); });
+document.getElementById('submit').addEventListener('click', submitPaper);
+document.getElementById('goHome').addEventListener('click', ()=>show('#home'));
+document.getElementById('retry').addEventListener('click', ()=>{
+  show('#home');
+});
+
+// ===== 啟動：載入題庫並顯示首頁 =====
+(async ()=>{
+  try{
+    DATA = await loadQuestions();
+  }catch(e){
+    console.error(e);
+    alert('載入題庫失敗：' + e.message);
+  }
+  renderHomeStat();
 })();
 </script>
 </body>
