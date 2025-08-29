@@ -46,10 +46,11 @@
   <section id="home" class="card">
     <div class="row">
       <h1>園藝丙級術科識別線上模擬測驗</h1>
-      <!-- 版本號 pill（關鍵：ver 會由 JS 置入） -->
-      <span class="pill">ver <b id="ver">v2025-08-25</b></span>
+      <span class="pill">ver <b id="ver">—</b></span>
     </div>
-    <div class="badge">測驗說明：本試題共測試 <b>100 題</b>，每題 <b>1 分</b>，總分 <b>100 分</b>，考試時間 <b>40 分鐘</b>。題型為單選題，需依試題圖片配合選項點選，正確點選者始給分，題目可前後閱視作答。</div>
+    <div class="pill" style="margin:.3rem 0 .6rem">
+      測驗說明：本試題共測試 <b>100 題</b>，每題 <b>1 分</b>，總分 <b>100 分</b>，考試時間 <b>40 分鐘</b>。題型為單選題，需依試題圖片配合選項點選，正確點選者始給分，題目可前後閱視作答。
+    </div>
     <div class="row" style="margin:.2rem 0 .8rem">
       <span class="pill">來源：<b id="sourceLabel">GCS</b></span>
       <span class="counter-badge" id="cloudBadge" title="雲端連線狀態">
@@ -147,11 +148,10 @@
 <script>
 /* ----------------------- 0) 全域設定 ----------------------- */
 
-// Apps Script Web App 「exec」或 googleusercontent echo URL
+// ✅ 將此改成你的 GAS /exec（若要分科統計，可直接放 /exec?subject=horti）
 const COUNTER_URL = 'https://script.google.com/macros/s/AKfycbxtY_zohVsck_4dnPvXnUaml9grxRm6C_3K6RML44s5yJIHAQXoKX222Hoii34LcKpf/exec';
-// ↑↑ 用你的 /exec，echo 版僅供測試顯示，無法遞增
 
-const QUOTA_100 = { B:20, G:20, A:4, H:6, C:20, E:10, F:10, D:10 }; // 8 類別比例
+const QUOTA_100 = { B:20, G:20, A:4, H:6, C:20, E:10, F:10, D:10 }; // 8 類別比例（果 20、菜 20、水 4、蔓 6、草 20、灌 10、喬 10、資材 10）
 const LABELS = ['A','B','C','D'];
 
 let QUESTIONS=[], CUR=0, ANSW=[], TIMER=null, LEFT=40*60;
@@ -160,7 +160,7 @@ let VERSION='—', RAW=null;
 const $  = s => document.querySelector(s);
 const $$ = s => document.querySelectorAll(s);
 const fmt = n => String(n).padStart(6,'0');
-const baseName = s => (s||'').replace(/_\d+$/,''); // 去尾號
+const baseName = s => (s||'').replace(/_\d+$/,''); // 去尾號（同名不同編號視為同一名稱）
 
 /* ----------------------- 1) 計數器（無手動重試） ----------------------- */
 const cloudDot  = $('#cloudDot');
@@ -173,10 +173,18 @@ function badge(state, note){
   else if(state==='ok'){ cloudDot.className='badge-dot dot-ok'; cloudText.textContent='雲端：已同步'; }
   else { cloudDot.className='badge-dot dot-off'; cloudText.textContent='雲端：離線'; if(note) cloudBadge.title = note; }
 }
+function showCount(n){ if(Number.isFinite(n)) globalCountEl.textContent = fmt(n)+' 人'; }
 
-function showCount(n){
-  if(!Number.isFinite(n)) return;
-  globalCountEl.textContent = fmt(n)+' 人';
+// 專用：在 COUNTER_URL 已含 query（如 subject=horti）時仍能安全附加 action=*
+function withAction(action){
+  try{
+    const u = new URL(COUNTER_URL);
+    u.searchParams.set('action', action);
+    return u.toString();
+  }catch(_){
+    // 若 COUNTER_URL 不是絕對 URL（理論上不會），退回簡單拼接
+    return COUNTER_URL + (COUNTER_URL.includes('?')?'&':'?') + 'action=' + encodeURIComponent(action);
+  }
 }
 
 function loadCounter(){
@@ -187,16 +195,20 @@ function loadCounter(){
   if(!COUNTER_URL.startsWith('http')) return badge('off','未設定 COUNTER_URL');
   badge('loading');
 
-  fetch(COUNTER_URL+'?action=get', {method:'GET', mode:'cors', credentials:'omit'})
+  fetch(withAction('get'), {method:'GET', mode:'cors', credentials:'omit'})
     .then(r=>r.json())
     .then(j=>{
-      if(j && j.ok===true && Number.isFinite(j.count)){
-        showCount(j.count);
-        localStorage.setItem('globalCount', j.count);
-        badge('ok');
-      }else{
-        badge('off','回傳格式不正確');
+      // 支援兩種回傳：{ok,count} 或 {ok,total,subjectCount}
+      if(j && j.ok===true){
+        const val = Number.isFinite(j.total) ? j.total : j.count;
+        if(Number.isFinite(val)){
+          showCount(val);
+          localStorage.setItem('globalCount', val);
+          badge('ok');
+          return;
+        }
       }
+      badge('off','回傳格式不正確');
     })
     .catch(e=>badge('off', String(e)));
 }
@@ -209,18 +221,16 @@ function incrementCounterOptimistic(){
 
   // 背景遞增（sendBeacon 優先；不阻塞 UI）
   badge('loading');
+  const incURL = withAction('inc');
   let sent = false;
   try{
     if(navigator.sendBeacon){
       const blob = new Blob(['inc=1'], {type:'text/plain'});
-      sent = navigator.sendBeacon(COUNTER_URL+'?action=inc', blob);
+      sent = navigator.sendBeacon(incURL, blob);
     }
   }catch(_){}
-
   if(!sent){
-    fetch(COUNTER_URL+'?action=inc', {method:'GET', mode:'cors', credentials:'omit'})
-      .catch(()=>{})
-      .finally(()=>badge('ok'));
+    fetch(incURL, {method:'POST',keepalive:true}).catch(()=>{}).finally(()=>badge('ok'));
   }else{
     setTimeout(()=>badge('ok'), 400);
   }
